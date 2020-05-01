@@ -1,0 +1,8 @@
+= micro ERP
+
+Very very small erp for home use.
+
+[source, bash]
+----
+$ bundle exec ruby ws.rb
+----
