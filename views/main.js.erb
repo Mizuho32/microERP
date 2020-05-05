@@ -1,0 +1,97 @@
+window.onload = ()=>{
+  $data = {};
+  $data.forminputs = Array.from(document.querySelectorAll('.form-inputs'));
+  $data.startV     = document.querySelector('#startV')
+  $data.recognition = null;
+
+<% if autostart then %>
+  setTimeout(startDictation, 500);
+<% end %>
+};
+
+function vchk(e) {
+  console.log(e.checked);
+  if (e.checked)
+    startDictation(); 
+  else
+    $data.recognition.stop();
+}
+
+function move(step) {
+  let i = $data.forminputs.indexOf(document.activeElement);
+  if (i !== -1) {
+    $data.forminputs[(i+step)%($data.forminputs.length)].focus();
+  }
+}
+
+function trap(text) {
+  console.log(`trap ${text}`);
+
+  let el = document.activeElement;
+  switch(text) {
+    case "<%= commands[:next_form] %>":
+      move(+1);
+      break;
+    case "<%= commands[:previous_form] %>":
+      move(-1);
+      break;
+    case "<%= commands[:delete_text] %>":
+      if (el.getAttribute('class') === "form-inputs")
+        el.value = "";
+      break;
+    case "<%= commands[:submit] %>":
+      document.querySelector('#input-submit').click();
+      break;
+    case "<%= commands[:save] %>":
+      document.querySelector('#input-save').click();
+      break;
+<% form_names.each do |k, v| %>
+    case "<%= v %>":
+      document.querySelector("#input-<%= k %>").focus();
+      break;
+<% end %>
+    default:
+      if (el.getAttribute('class') === "form-inputs")
+        el.value = text;
+      break;
+  }
+}
+
+function startDictation() {
+  console.log("ERB Version");
+
+  let recognition = null;
+  if (window.hasOwnProperty('webkitSpeechRecognition'))
+    recognition = new webkitSpeechRecognition();
+  else
+    recognition = SpeechRecognition.SpeechRecognition();
+
+  $data.recognition = recognition;
+
+  if (!(recognition===null)) {
+    console.log('main');
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "<%= lang %>";
+    recognition.start();
+
+    recognition.onresult = (e)=>{
+      let text = e.results[0][0].transcript
+      console.log('results');
+      document.getElementById('transcript').value = text;
+
+      trap(text);
+    };
+
+    recognition.onerror = (e)=>{
+      console.log(e);
+    }
+
+    recognition.onend = ()=>{
+      console.log("end");
+      if ($data.startV.checked)
+        recognition.start();
+    }
+  }
+}

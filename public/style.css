@@ -1,0 +1,30 @@
+.speech {
+
+	border: 1px solid #DDD;
+	width:300px;
+	padding:0;
+	margin:0;
+
+}
+
+.speech input {
+
+	border:0;
+	width:240px;
+	display:inline-block;
+	height:30px;
+	font-size: 14px;
+
+}
+
+.speech img {
+
+	float:right;
+	width:40px
+
+}
+
+.form-inputs:focus {
+  border-style: solid;
+  border-color: green;
+}
