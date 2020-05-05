@@ -1,8 +1,29 @@
 = micro ERP
 
-Very very small erp for home use.
+Very very small erp for home use, voice input available.
 
 [source, bash]
 ----
-$ bundle exec ruby ws.rb
+$ bundle exec ruby ws.rb config.yaml
+----
+
+[source, yaml]
+.config.yaml
+----
+:server:
+  :type_storage: "収納"
+:client:
+  :lang: "ja_JP"
+  :autostart: true
+  :commands:
+    :next_form: "次"
+    :previous_form: "戻る"
+    :delete_text: "削除"
+    :submit: "送信"
+    :save: "保存"
+  :form_names:
+    :name: "名前"
+    :type: "タイプ"
+    :parent: "親"
+    :comment: "コメント"
 ----
