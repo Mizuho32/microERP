@@ -46,7 +46,7 @@ get ?/ do
   erb "index.htm".to_sym, locals: {
     autostart: config[:client][:autostart],
     types: types, parents: parents,
-    type: data[:type].to_s, parent: data[:parent].to_s
+    type: data[:type].to_s, parent: data[:parent].to_s, comment: data[:comment].to_s
   }
 end
 
@@ -80,12 +80,13 @@ else
 
   data[:type]   = type||data[:type]
   data[:parent] = parent||data[:parent]
+  data[:comment] = comment||data[:comment]
 end
 
   erb "index.htm".to_sym, locals: {
     autostart: config[:client][:autostart],
     types: types, parents: parents,
-    type: data[:type].to_s, parent: data[:parent].to_s
+    type: data[:type].to_s, parent: data[:parent].to_s, comment: data[:comment].to_s
   }
 end
 
