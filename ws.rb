@@ -36,6 +36,7 @@ get "/main.js" do
   content_type "text/javascript"
   erb "main.js".to_sym, locals: {
     lang: config[:client][:lang],
+    select_word: config[:client][:select_word],
     autostart: config[:client][:autostart],
     form_names: config[:client][:form_names],
     commands: config[:client][:commands]

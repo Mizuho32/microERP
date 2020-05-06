@@ -1,8 +1,9 @@
 window.onload = ()=>{
   $data = {};
   $data.forminputs = Array.from(document.querySelectorAll('.form-inputs'));
-  $data.startV     = document.querySelector('#startV')
-  $data.speechbox  = document.querySelector('#speechbox')
+  $data.startV     = document.querySelector('#startV');
+  $data.speechbox  = document.querySelector('#speechbox');
+  $data.list       = document.querySelector("#list-cand");
   $data.recognition = null;
 
 <% if autostart then %>
@@ -17,10 +18,32 @@ function vchk(e) {
     $data.recognition.stop();
 }
 
+function isInputWithDL(e) {
+  return e===$data.forminputs[1] || e=== $data.forminputs[2];
+}
+
 function move(step) {
   let i = $data.forminputs.indexOf(document.activeElement);
   if (i !== -1) {
     $data.forminputs[(i+step)%($data.forminputs.length)].focus();
+  }
+}
+
+function showDL(e, text) {
+  // type nor parent
+  if (!isInputWithDL(e))
+    return;
+
+  console.log("showDL", e);
+
+  let list = $data.list;
+  list.innerHTML = "";
+
+  for (let o of e.list.options) {
+    let li = document.createElement("li");
+    li.appendChild(document.createTextNode(o.value));
+    if (text == null || text === "" || o.value.includes(text))
+      list.appendChild(li);
   }
 }
 
@@ -38,6 +61,7 @@ function trap(text) {
     case "<%= commands[:delete_text] %>":
       if (el.getAttribute('class') === "form-inputs")
         el.value = "";
+      showDL(el, el.value);
       break;
     case "<%= commands[:submit] %>":
       document.querySelector('#input-submit').click();
@@ -51,8 +75,19 @@ function trap(text) {
       break;
 <% end %>
     default:
+      let m = text.match(<%= select_word.inspect %>);
+      let num_str;
+      if (isInputWithDL(el) && m !== null && (num_str = toArb(m[1])) !== false) {
+        let num = parseInt(num_str);
+        let li = $data.list.children[num-1];
+        if (li !== undefined)
+          el.value = li.innerText;
+        break;
+      }
+
       if (el.getAttribute('class') === "form-inputs")
         el.value = text;
+      showDL(el, el.value);
       break;
   }
 }
@@ -76,13 +111,11 @@ function startDictation() {
     recognition.start();
 
     recognition.onsoundstart = ()=>{
-      console.log("sound start");
       $data.speechbox.classList.remove("audioend");
       $data.speechbox.classList.add("audiostart");
     };
 
     recognition.onsoundend = ()=>{
-      console.log("sound end");
       $data.speechbox.classList.remove("audiostart");
       $data.speechbox.classList.add("audioend");
     };
