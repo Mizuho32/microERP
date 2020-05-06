@@ -2,6 +2,7 @@ window.onload = ()=>{
   $data = {};
   $data.forminputs = Array.from(document.querySelectorAll('.form-inputs'));
   $data.startV     = document.querySelector('#startV')
+  $data.speechbox  = document.querySelector('#speechbox')
   $data.recognition = null;
 
 <% if autostart then %>
@@ -10,7 +11,6 @@ window.onload = ()=>{
 };
 
 function vchk(e) {
-  console.log(e.checked);
   if (e.checked)
     startDictation(); 
   else
@@ -58,7 +58,6 @@ function trap(text) {
 }
 
 function startDictation() {
-  console.log("ERB Version");
 
   let recognition = null;
   if (window.hasOwnProperty('webkitSpeechRecognition'))
@@ -75,6 +74,18 @@ function startDictation() {
     recognition.interimResults = false;
     recognition.lang = "<%= lang %>";
     recognition.start();
+
+    recognition.onsoundstart = ()=>{
+      console.log("sound start");
+      $data.speechbox.classList.remove("audioend");
+      $data.speechbox.classList.add("audiostart");
+    };
+
+    recognition.onsoundend = ()=>{
+      console.log("sound end");
+      $data.speechbox.classList.remove("audiostart");
+      $data.speechbox.classList.add("audioend");
+    };
 
     recognition.onresult = (e)=>{
       let text = e.results[0][0].transcript
