@@ -2,6 +2,9 @@
 
 Very very small erp for home use, voice input available.
 
+image:https://user-images.githubusercontent.com/5453161/81174522-fbe6b780-8fdc-11ea-93d5-9004a45e7811.gif[output3]
+
+
 [source, bash]
 ----
 $ bundle exec ruby ws.rb config.yaml
@@ -15,6 +18,7 @@ $ bundle exec ruby ws.rb config.yaml
 :client:
   :lang: "ja_JP"
   :autostart: true
+  :select_word: !ruby/regexp /([^番]+)番/
   :commands:
     :next_form: "次"
     :previous_form: "戻る"
