@@ -31,3 +31,28 @@ $ bundle exec ruby ws.rb config.yaml
     :parent: "親"
     :comment: "コメント"
 ----
+
+[source, systemd]
+.microerp.service
+----
+[Unit]
+Description=Micro erp system
+After=syslog.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+PrivateTmp=true
+Environment=OVPATH=/path/to/project dir
+ExecStart=/bin/bash ${OVPATH}/run.sh
+ExecStop=/bin/kill $MAINPID
+KillMode=process
+#KillMode=control-group
+RestartSec=5s
+Restart=on-failure
+#User=user
+#Group=group
+
+[Install]
+WantedBy=multi-user.target
+----
