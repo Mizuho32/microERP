@@ -4,6 +4,7 @@ require 'yaml'
 require 'sinatra'
 
 set :bind, '0.0.0.0'
+set :port, 5678
 
 config       = YAML.load_file(ARGV.first)
 types_file   = 'types.yaml';
